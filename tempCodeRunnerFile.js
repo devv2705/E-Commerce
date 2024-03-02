@@ -1,0 +1,1 @@
+ bcrypt.hashSync("Dev@2705", 8)

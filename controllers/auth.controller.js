@@ -1,10 +1,10 @@
 /**
  * i need to write controller or logic for user registration
  */
-const bcrypt=require("bcryptjs")
+const bcrypt = require('bcryptjs')
 const user_model=require("../models/user.model")
 
-exports.signup = async (req,res)=>{
+exports.signup = async(req,res)=>{
     /** logic to create user */
 
     //1.read the req body
@@ -31,7 +31,8 @@ exports.signup = async (req,res)=>{
     }catch(err){
         console.log("error while registering the user",err)
         res.status(500).send({
-            message:"some error happen while registering the user"
+            message:"some error happen while registering the user",
+            error:err.message
         })
         //500 indicates server error
     }

@@ -27,7 +27,7 @@ const userSchema=mongoose.Schema({
         type:String,
         required:true,
         lowercase:true,
-        minLenght : 10,
+        minLength : 10,
         unique:true
     },
     userType : {
