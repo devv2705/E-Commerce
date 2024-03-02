@@ -48,6 +48,4 @@ exports.signup = async(req,res)=>{
         })
         //500 indicates server error
     }
-
-    //3.return res back to user
 }
