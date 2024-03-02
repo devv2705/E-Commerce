@@ -24,8 +24,20 @@ exports.signup = async(req,res)=>{
     try{
        const user_created = await user_model.create(userObj)
 
+       //but i dont want to send password on response and other sensitive info so i extract info and then send to postman
+
+       //made copy of object so hide the pass
+       const res_Obj={
+            name:user_created.name,
+            userId:user_created.userId,
+            email:user_created.email,
+            userType:user_created.userType,
+            createdAt:user_created.createdAt,
+            updatedAt:user_created.updatedAt
+       }
+
        //return this user : 201 indicates success
-       res.status(201).send(user_created)
+       res.status(201).send(res_Obj)
         
 
     }catch(err){
