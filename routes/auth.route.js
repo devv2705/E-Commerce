@@ -23,7 +23,7 @@ module.exports = (app) => {
      * crete route for sign in
      * POST : localhost:8888/ecomm/api/v1/auth/signin
      */
-    app.post("/ecomm/api/v1/auth/signin",authController.signin)
+    app.post("/ecomm/api/v1/auth/signin",[authMw.verify_Signin_Body],authController.signin)
 
 
 

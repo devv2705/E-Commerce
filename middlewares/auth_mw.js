@@ -54,6 +54,25 @@ const verify_SignUp_Body=async (req,res,next)=>{
 
 }
 
+const verify_Signin_Body=async (req,res,next)=>{
+
+    if(!req.body.userId){
+        return res.status(400).send({
+            message:"userId is not provided"
+        })
+    }
+    if(!req.body.password){
+        return res.status(400).send({
+            message:"password is not provided"
+        })
+    }
+
+    next()
+
+
+}
+
 module.exports={
-    verifySignUpBody:verify_SignUp_Body
+    verifySignUpBody:verify_SignUp_Body,
+    verify_Signin_Body:verify_Signin_Body
 }
