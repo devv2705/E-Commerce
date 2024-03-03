@@ -100,14 +100,31 @@ const verifyToken=(req,res,next)=>{
                 message:"UnAuthorised : user for this token does not exist"
             })
         }
+        //set user in req body for admin varify
+        req.user=user
          //move to the next step
          next();
     })
    
 }
 
+const isAdmin=(req,res,next)=>{
+    const user=req.user
+    if(user&&user.userType == "ADMIN"){
+        next()
+    }
+    else{
+       return res.status(403).send({
+        message : "only admin user are allowed to access this endpoint"
+       })
+    }
+}
+
+
+
 module.exports={
     verifySignUpBody:verify_SignUp_Body,
     verify_Signin_Body:verify_Signin_Body,
-    verify_Token:verifyToken
+    verify_Token:verifyToken,
+    isAdmin:isAdmin
 }

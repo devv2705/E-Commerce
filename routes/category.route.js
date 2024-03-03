@@ -8,6 +8,6 @@ module.exports=(app)=>{
  * API for creating new category
  * POST localhost:8888/ecomm/api/v1/categories
  */
-    app.post("/ecomm/api/v1/categories",[auth_mw.verify_Token],catController.createNewCategory)
+    app.post("/ecomm/api/v1/categories",[auth_mw.verify_Token,auth_mw.isAdmin],catController.createNewCategory)
 
 }
