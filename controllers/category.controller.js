@@ -9,7 +9,8 @@ exports.createNewCategory=async (req,res)=>{
     
     //read the req body
 
-    //create the category
+     //create the category
+     //here i direct read and create the category
     const cat_data={
         name:req.body.name,
         description:req.body.description
