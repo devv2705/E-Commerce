@@ -6,7 +6,6 @@ const server_config = require('./configs/server.config')
 const db_config = require('./configs/db.config')
 const user_model = require('./models/user.model')
 const bcrypt = require('bcryptjs')
-
 const app = express();
 app.use(express.json()) //this is middleware bcoz when we hit req through postman it was in json and our app can not direct understand json 
 
@@ -68,6 +67,7 @@ async function init() {
 //calling routes and passing app object
 require("./routes/auth.route")(app)
 require("./routes/category.route")(app)
+require("./routes/product.route")(app)
 
 
 //Start the server

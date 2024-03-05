@@ -13,7 +13,8 @@ exports.createNewCategory=async (req,res)=>{
      //here i direct read and create the category
     const cat_data={
         name:req.body.name,
-        description:req.body.description
+        description:req.body.description,
+        product:[]
     }
 
     //insert into mongoDb
@@ -30,7 +31,6 @@ exports.createNewCategory=async (req,res)=>{
         })
     }
 
-    
 }
 
 exports.deleteCategory=async(req,res)=>{

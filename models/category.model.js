@@ -1,5 +1,6 @@
 
 const mongoose=require('mongoose')
+const product=require('../models/product.model')
 
 
 const categorySchema=new mongoose.Schema({
@@ -13,8 +14,8 @@ const categorySchema=new mongoose.Schema({
     description:{
         type:String,
         required:true
-    }
-
+    },
+    product:[product.product]
 
 },{timestamps:true,versionKey:false})
 

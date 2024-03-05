@@ -21,7 +21,7 @@ module.exports=(app)=>{
      * read the category from db
      * GET : localhost:8888/ecomm/api/v1/readcategories
      */
-    app.get("/ecomm/api/v1/readcategories",[auth_mw.verify_Token,auth_mw.isAdmin],catController.readCategory)
+    app.get("/ecomm/api/v1/readcategories",[auth_mw.verify_Token],catController.readCategory)
 
 
     /**
@@ -29,4 +29,6 @@ module.exports=(app)=>{
      * POST : localhost:8888/ecomm/api/v1/updatecategories
      */
     app.post("/ecomm/api/v1/updatecategories",[auth_mw.verify_Token,auth_mw.isAdmin],catController.updateCategory)
+
+    
 }
