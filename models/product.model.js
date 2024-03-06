@@ -10,7 +10,7 @@ const productSchema=mongoose.Schema({
        type:String
     },
     price:{
-        type:String,
+        type:Number,
         required:true
     },
     description:{

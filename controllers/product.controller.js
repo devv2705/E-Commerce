@@ -66,7 +66,7 @@ exports.findProduct = async (req, res) => {
     try {
         const productName = req.body.name;
 
-        const category = await category_model.findOne({ "product.name": productName });
+        const category = await category_model.findOne({ "product.name":productName });
 
         if (!category) {
             return res.status(404).send({
