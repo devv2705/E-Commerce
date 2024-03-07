@@ -1,10 +1,14 @@
 const cart_model = require("../models/cart.model");
 const category_model = require("../models/category.model");
-const { product } = require("../models/product.model");
+const product = require("../models/product.model");
+const mongoose = require('mongoose')
 
 exports.addToCart = async (req, res) => {
     try {
         const productName = req.body.name;
+
+        // Get the logged-in user's ID from the token
+        const userId = req.user._id;
 
         const category = await category_model.findOne({ "product.name": productName });
 
@@ -22,26 +26,26 @@ exports.addToCart = async (req, res) => {
             });
         }
 
-        let cartItem = await cart_model.findOne({ name: productName });
+        let cartItem = await cart_model.findOne({ name: productName, user: userId });
 
-        //we can also use findandupdate method so no need to use save()
-        //but im using manual approach 
+        // Use findAndUpdate method to update the quantity
         if (cartItem) {
-            // If the product is already in the cart, update the quantity
-            cartItem.quantity += 1;
-            await cartItem.save();
-        
+            await cart_model.findOneAndUpdate(
+                { name: productName, user: userId },
+                { $inc: { quantity: 1 } }
+            );
+
             return res.status(201).send({
-                message: `Quantity updated to ${cartItem.quantity}`
+                message: `Quantity updated to ${cartItem.quantity + 1}`
             });
         }
-        
 
         // If the product is not in the cart, create a new cart item
         const cart = {
             name: productName,
             quantity: 1,
-            price: product.price
+            price: product.price,
+            user: userId
         };
 
         const cartField = await cart_model.create(cart);
@@ -55,58 +59,87 @@ exports.addToCart = async (req, res) => {
         });
     }
 };
-exports.delFromCart=async(req,res)=>{
 
-        try{
+exports.delFromCart = async (req, res) => {
+    try {
+        const productName = req.body.name;
+        const userId = req.user._id;  // Assuming req.user contains the logged-in user details
 
-            const productName=req.body.name
-            // const category=await category_model.findOne({"product.name":productName})
-            // const product=await category.findOne(product=>product.name==productName)
-            const product=await cart_model.findOne({name:productName})
-            const quantity=await product.quantity
-            if(quantity!=1){
-                product.quantity-=1
-                product.save()
-                return res.status(201).send({
-                    message:`1 quantity of ${productName} deleted`
-                })
-            }
-            else{
-                const deletee=await cart_model.deleteOne(product)
-                return res.status(201).send({
-                    message:`remove the ${productName} from cart`
-                })
-            }
-
-        }catch(err){
-            console.log("error occured while deleting from cart")
-            return res.status(501).send({
-                message:"Error while deleteing froduct from cart"
-            })
-        }
-}
-
-exports.readCart=async (req,res)=>{
-    //if api hit through name then it will return that name product detail
-    //but if req.body is empty then return whole cart of user
-    try{
-
-        const productName=req.body.name
-        const cart=await cart_model.find()
-
-        if(!productName){
-            return res.status(201).send(cart)
-        }
-        else{
-        const data=await cart_model.findOne({name:productName})
-        return res.status(201).send(data)
+        // Ensure that the userId is a valid ObjectId
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(400).send({
+                message: "Invalid user ID"
+            });
         }
 
-    }catch(err){
-        console.log("error while fetching cart data")
+        const category = await category_model.findOne({ "product.name": productName });
+
+        if (!category) {
+            return res.status(404).send({
+                message: "Product not found in any category"
+            });
+        }
+
+        const product = category.product.find(product => product.name === productName);
+
+        if (!product) {
+            return res.status(404).send({
+                message: "Product not found in the specified category"
+            });
+        }
+
+        let cartItem = await cart_model.findOne({ name: productName, user: userId });
+
+        if (!cartItem) {
+            return res.status(404).send({
+                message: "Product not found in the user's cart"
+            });
+        }
+
+        const quantity = cartItem.quantity;
+
+        if (quantity !== 1) {
+            cartItem.quantity -= 1;
+            await cartItem.save();
+            return res.status(200).send({
+                message: `1 quantity of ${productName} deleted`
+            });
+        } else {
+            await cart_model.deleteOne({ name: productName, user: userId });
+            return res.status(200).send({
+                message: `Remove ${productName} from the cart`
+            });
+        }
+    } catch (err) {
+        console.error("Error occurred while deleting from cart", err);
         return res.status(500).send({
-            message:"error occured while fetching the cart detail"
-        })
+            message: "Error while deleting product from cart"
+        });
     }
-}
+};
+
+
+
+exports.readCart = async (req, res) => {
+    try {
+        const userId = req.user._id;
+
+        // If api hit through name then it will return that name product detail
+        // But if req.body is empty then return the whole cart of the logged-in user
+        const productName = req.body.name;
+
+        if (!productName) {
+            const cart = await cart_model.find({ user: userId });
+            return res.status(201).send(cart);
+        } else {
+            const data = await cart_model.findOne({ name: productName, user: userId });
+            return res.status(201).send(data);
+        }
+    } catch (err) {
+        console.log("Error while fetching cart data", err);
+        return res.status(500).send({
+            message: "Error occurred while fetching the cart detail"
+        });
+    }
+};
 

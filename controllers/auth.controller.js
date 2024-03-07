@@ -82,7 +82,7 @@ exports.signin=async (req,res)=>{
     //also provide one secret string rendom and expiry time
     //this secret we define in config file 
     const token=jwt.sign({id:user.userId},secret.secret,{
-        expiresIn:180
+        expiresIn:300
     })
 
     res.status(200).send({

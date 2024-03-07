@@ -1,1 +1,1 @@
- bcrypt.hashSync("Dev@2705", 8)
+const mongoose = require('mongoose')

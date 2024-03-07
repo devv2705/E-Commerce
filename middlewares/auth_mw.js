@@ -102,6 +102,7 @@ const verifyToken=(req,res,next)=>{
         }
         //set user in req body for admin varify
         req.user=user
+        req.userId = decoded.id;
          //move to the next step
          next();
     })

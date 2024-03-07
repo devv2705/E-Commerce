@@ -21,7 +21,7 @@ module.exports=(app)=>{
      * get :localhost:8888/ecomm/api/v1/find_products
      */
 
-    app.get("/ecomm/api/v1/find_products",[auth_mw.verify_Token,auth_mw.isAdmin],proController.findProduct);
+    app.get("/ecomm/api/v1/find_products",[auth_mw.verify_Token],proController.findProduct);
 
     
 }
